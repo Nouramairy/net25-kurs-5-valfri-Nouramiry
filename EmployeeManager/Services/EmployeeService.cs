@@ -63,4 +63,16 @@ public class EmployeeService
 
         return true;
     }
+
+    public bool Delete(int id)
+    {
+        Employee? employee = GetById(id);
+
+        if (employee is null)
+        {
+            return false;
+        }
+
+        return _employees.Remove(employee);
+    }
 }
