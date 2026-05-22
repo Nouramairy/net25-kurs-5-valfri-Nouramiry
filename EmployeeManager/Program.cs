@@ -35,7 +35,7 @@ while (isRunning)
             break;
 
         case "5":
-            ShowComingSoon("Delete employee");
+            DeleteEmployee();
             break;
 
         case "0":
@@ -249,6 +249,65 @@ void UpdateEmployee()
     Pause();
 }
 
+void DeleteEmployee()
+{
+    Console.WriteLine("Delete employee");
+    Console.WriteLine("---------------");
+
+    Console.Write("Employee id: ");
+    string? input = Console.ReadLine();
+
+    if (!int.TryParse(input, out int id))
+    {
+        Console.WriteLine("Invalid id. Please enter a number.");
+        Pause();
+        return;
+    }
+
+    Employee? employee = employeeService.GetById(id);
+
+    if (employee is null)
+    {
+        Console.WriteLine("No employee was found with that id.");
+        Pause();
+        return;
+    }
+
+    Console.WriteLine();
+
+    Console.WriteLine("Employee to delete:");
+
+    PrintEmployee(employee);
+
+    Console.WriteLine();
+
+    Console.Write("Confirm delete (y/n): ");
+
+    string? confirmation = Console.ReadLine();
+
+    if (!string.Equals(confirmation?.Trim(), "y", StringComparison.OrdinalIgnoreCase))
+    {
+        Console.WriteLine("Delete cancelled.");
+        Pause();
+        return;
+    }
+
+    bool wasDeleted = employeeService.Delete(id);
+
+    Console.WriteLine();
+
+    if (wasDeleted)
+    {
+        Console.WriteLine("Employee was deleted successfully.");
+    }
+    else
+    {
+        Console.WriteLine("Employee could not be deleted.");
+    }
+
+    Pause();
+}
+
 void PrintEmployee(Employee employee)
 {
     Console.WriteLine($"{employee.Id}. {employee.FullName} - {employee.Role} - {employee.Email}");
@@ -267,12 +326,6 @@ string ReadRequiredInput()
 
         Console.Write("Value cannot be empty. Try again: ");
     }
-}
-
-void ShowComingSoon(string featureName)
-{
-    Console.WriteLine($"{featureName} will be implemented in a later issue.");
-    Pause();
 }
 
 void Pause()
