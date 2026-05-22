@@ -7,7 +7,7 @@ namespace EmployeeManager.Services;
 
 public class EmployeeService
 {
-    private readonly List<Employee> _employees = [];
+    private readonly List<Employee> _employees = new();
     private int _nextId = 1;
 
     public int Count => _employees.Count;
@@ -32,5 +32,19 @@ public class EmployeeService
         _nextId++;
 
         return employee;
+    }
+
+    public Employee? GetById(int id)
+    {
+        return _employees.FirstOrDefault(employee => employee.Id == id);
+    }
+
+    public IReadOnlyList<Employee> SearchByName(string searchTerm)
+    {
+        return _employees
+            .Where(employee =>
+                employee.FirstName.Contains(searchTerm, StringComparison.OrdinalIgnoreCase) ||
+                employee.LastName.Contains(searchTerm, StringComparison.OrdinalIgnoreCase))
+            .ToList();
     }
 }
