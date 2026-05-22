@@ -31,7 +31,7 @@ while (isRunning)
             break;
 
         case "4":
-            ShowComingSoon("Update employee");
+            UpdateEmployee();
             break;
 
         case "5":
@@ -187,6 +187,63 @@ void SearchEmployeeByName()
     foreach (Employee employee in employees)
     {
         PrintEmployee(employee);
+    }
+
+    Pause();
+}
+
+void UpdateEmployee()
+{
+    Console.WriteLine("Update employee");
+    Console.WriteLine("---------------");
+
+    Console.Write("Employee id: ");
+    string? input = Console.ReadLine();
+
+    if (!int.TryParse(input, out int id))
+    {
+        Console.WriteLine("Invalid id. Please enter a number.");
+        Pause();
+        return;
+    }
+
+    Employee? existingEmployee = employeeService.GetById(id);
+
+    if (existingEmployee is null)
+    {
+        Console.WriteLine("No employee was found with that id.");
+        Pause();
+        return;
+    }
+
+    Console.WriteLine();
+    Console.WriteLine("Current employee:");
+    PrintEmployee(existingEmployee);
+    Console.WriteLine();
+
+    Console.Write("New first name: ");
+    string firstName = ReadRequiredInput();
+
+    Console.Write("New last name: ");
+    string lastName = ReadRequiredInput();
+
+    Console.Write("New role: ");
+    string role = ReadRequiredInput();
+
+    Console.Write("New email: ");
+    string email = ReadRequiredInput();
+
+    bool wasUpdated = employeeService.Update(id, firstName, lastName, role, email);
+
+    Console.WriteLine();
+
+    if (wasUpdated)
+    {
+        Console.WriteLine("Employee was updated successfully.");
+    }
+    else
+    {
+        Console.WriteLine("Employee could not be updated.");
     }
 
     Pause();
