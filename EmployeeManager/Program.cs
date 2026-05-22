@@ -1,13 +1,14 @@
 ﻿using EmployeeManager.Models;
+using EmployeeManager.Services;
 
-List<Employee> employees = new();
+EmployeeService employeeService = new();
 bool isRunning = true;
 
 while (isRunning)
 {
     Console.Clear();
 
-    PrintHeader(employees.Count);
+    PrintHeader(employeeService.Count);
     PrintMenu();
 
     Console.Write("Choose an option: ");
@@ -18,11 +19,11 @@ while (isRunning)
     switch (choice)
     {
         case "1":
-            ShowComingSoon("List employees");
+            ListEmployees();
             break;
 
         case "2":
-            ShowComingSoon("Add employee");
+            AddEmployee();
             break;
 
         case "3":
@@ -66,6 +67,67 @@ void PrintMenu()
     Console.WriteLine("5. Delete employee");
     Console.WriteLine("0. Exit");
     Console.WriteLine();
+}
+
+void AddEmployee()
+{
+    Console.WriteLine("Add employee");
+    Console.WriteLine("------------");
+
+    Console.Write("First name: ");
+    string firstName = ReadRequiredInput();
+
+    Console.Write("Last name: ");
+    string lastName = ReadRequiredInput();
+
+    Console.Write("Role: ");
+    string role = ReadRequiredInput();
+
+    Console.Write("Email: ");
+    string email = ReadRequiredInput();
+
+    Employee employee = employeeService.Add(firstName, lastName, role, email);
+
+    Console.WriteLine();
+    Console.WriteLine($"Employee created: {employee.Id} - {employee.FullName}");
+    Pause();
+}
+
+void ListEmployees()
+{
+    Console.WriteLine("Employees");
+    Console.WriteLine("---------");
+
+    IReadOnlyList<Employee> employees = employeeService.GetAll();
+
+    if (employees.Count == 0)
+    {
+        Console.WriteLine("No employees have been added yet.");
+        Pause();
+        return;
+    }
+
+    foreach (Employee employee in employees)
+    {
+        Console.WriteLine($"{employee.Id}. {employee.FullName} - {employee.Role} - {employee.Email}");
+    }
+
+    Pause();
+}
+
+string ReadRequiredInput()
+{
+    while (true)
+    {
+        string? input = Console.ReadLine();
+
+        if (!string.IsNullOrWhiteSpace(input))
+        {
+            return input.Trim();
+        }
+
+        Console.Write("Value cannot be empty. Try again: ");
+    }
 }
 
 void ShowComingSoon(string featureName)
