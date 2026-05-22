@@ -47,4 +47,20 @@ public class EmployeeService
                 employee.LastName.Contains(searchTerm, StringComparison.OrdinalIgnoreCase))
             .ToList();
     }
+    public bool Update(int id, string firstName, string lastName, string role, string email)
+    {
+        Employee? employee = GetById(id);
+
+        if (employee is null)
+        {
+            return false;
+        }
+
+        employee.FirstName = firstName;
+        employee.LastName = lastName;
+        employee.Role = role;
+        employee.Email = email;
+
+        return true;
+    }
 }
